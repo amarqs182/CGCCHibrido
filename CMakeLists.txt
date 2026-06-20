@@ -32,14 +32,7 @@ FetchContent_Declare(
   GIT_TAG master
 )
 
-# Configura o FetchContent para baixar o ImGui automaticamente
-FetchContent_Declare(
-  imgui
-  GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG v1.91.8
-)
-
-FetchContent_MakeAvailable(stb_image imgui)
+FetchContent_MakeAvailable(stb_image)
 
 # Adiciona as pastas de cabeçalhos
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -47,10 +40,6 @@ include_directories(${CMAKE_SOURCE_DIR}/common)
 include_directories(${CMAKE_SOURCE_DIR}/include/glad)
 include_directories(${glm_SOURCE_DIR})
 include_directories(${stb_image_SOURCE_DIR})
-
-# Adiciona diretórios do ImGui
-include_directories(${imgui_SOURCE_DIR})
-include_directories(${imgui_SOURCE_DIR}/backends)
 
 
 # Lista de exemplos/exercícios podem ser colocados aqui também
@@ -61,17 +50,11 @@ set(EXERCISES
     SpherePhong
     CuboIluminacao
     TrajectoryDemo
-    MainDiorama
 )
 
 # Arquivos adicionais necessários para a TrajectoryDemo
 set(TRAJECTORY_SRC
     src/Trajectory.cpp
-)
-
-# Arquivos adicionais necessários para o MainDiorama
-set(MAINDIORAMA_SRC
-    src/SceneParser.cpp
 )
 
 add_compile_options(-Wno-pragmas)
@@ -103,18 +86,6 @@ foreach(EXERCISE ${EXERCISES})
     elseif(${EXERCISE} STREQUAL "Hello3DCamera")
         # Hello3DCamera precisa do arquivo Camera.cpp
         add_executable(${EXERCISE} src/${EXERCISE}.cpp src/Camera.cpp ${GLAD_C_FILE})
-    elseif(${EXERCISE} STREQUAL "MainDiorama")
-        # MainDiorama usa Camera.cpp, ObjParser.cpp e ImGui
-        set(IMGUI_SOURCES
-            ${imgui_SOURCE_DIR}/imgui.cpp
-            ${imgui_SOURCE_DIR}/imgui_draw.cpp
-            ${imgui_SOURCE_DIR}/imgui_tables.cpp
-            ${imgui_SOURCE_DIR}/imgui_widgets.cpp
-            ${imgui_SOURCE_DIR}/imgui_demo.cpp
-            ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
-            ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-        )
-        add_executable(${EXERCISE} src/${EXERCISE}.cpp src/Camera.cpp src/ObjParser.cpp ${IMGUI_SOURCES} ${GLAD_C_FILE})
     else()
         add_executable(${EXERCISE} src/${EXERCISE}.cpp ${GLAD_C_FILE})
     endif()
